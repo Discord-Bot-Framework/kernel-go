@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "commitMessagePrefix": "[dependencies]",
+  "extends": [
+    "config:base",
+    ":disableRateLimiting"
+  ],
+  "baseBranches": [
+    "main"
+  ],
+  "golang": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "matchManagers": [
+        "gomod"
+      ],
+      "matchDepNames": [
+        "go"
+      ],
+      "matchDepTypes": [
+        "golang"
+      ],
+      "rangeStrategy": "bump"
+    }
+  ],
+  "postUpdateOptions": [
+    "gomodTidyE",
+    "gomodUpdateImportPaths"
+  ]
+}

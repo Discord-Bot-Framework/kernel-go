@@ -1,0 +1,10 @@
+[Unit]
+Description=Watch
+
+[Path]
+PathModified=/opt/Kernel/flag
+Unit=kernel.service
+
+[Install]
+WantedBy=multi-user.target
+
