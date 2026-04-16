@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	discordx "github.com/discord-bot-framework/kernel-go/internal/discord"
+	"github.com/discord-bot-framework/kernel-go/internal/utils"
 	"github.com/disgoorg/disgo/discord"
 	"github.com/disgoorg/disgo/handler"
 )
@@ -41,6 +42,32 @@ func (s *State) handleModuleList(
 		return e.CreateMessage(
 			discord.NewMessageCreate().WithContent("No modules loaded.").WithEphemeral(true),
 		)
+	}
+
+	const perPage = 10
+	if len(items) > perPage {
+		pages := make([]utils.PaginatorPage, 0, (len(items)+perPage-1)/perPage)
+		for i := 0; i < len(items); i += perPage {
+			end := min(i+perPage, len(items))
+
+			var b bytes.Buffer
+			for _, it := range items[i:end] {
+				fmt.Fprintf(&b, "- `%s` (%s)", it.Name, it.Version)
+				fmt.Fprintln(&b)
+			}
+
+			pages = append(pages, utils.PaginatorPage{
+				Title:       "Loaded Modules",
+				Description: trimTrailingNewline(b.String()),
+			})
+		}
+
+		session, err := s.paginator.NewSession(e.User().ID, utils.ExpireModeAfterLastUsage, pages)
+		if err != nil {
+			return e.CreateMessage(discordx.EphemeralError("Failed to create paginator."))
+		}
+
+		return e.CreateMessage(s.paginator.MessageCreate(session, true))
 	}
 
 	var b bytes.Buffer

@@ -6,6 +6,8 @@ import (
 )
 
 func Register(r *discordx.Router, s *State) {
+	r.Component("/paginator/{id}/{action}", s.handlePaginator)
+
 	r.Slash("/bot debug download", s.handleDebugDownload)
 	r.Slash("/bot debug export", s.handleDebugExport)
 	r.Autocomplete("/bot debug export", s.autocompleteDebugExport)

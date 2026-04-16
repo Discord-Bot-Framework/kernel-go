@@ -222,6 +222,7 @@ func (s *State) handleDebugRestart(
 		s.logger.Error("failed to write restart flag", "err", err)
 	}
 
+	s.SaveShardStates()
 	s.RequestShutdown("restart requested")
 
 	return e.CreateMessage(

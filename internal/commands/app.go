@@ -123,7 +123,9 @@ func (s *State) handleAppInfo(
 
 	app, err := e.Client().Rest.GetCurrentApplication()
 	if err != nil {
-		return e.CreateMessage(discordx.EphemeralError("Failed to retrieve application information."))
+		return e.CreateMessage(
+			discordx.EphemeralError("Failed to retrieve application information."),
+		)
 	}
 
 	embed := discord.NewEmbed().
@@ -163,7 +165,9 @@ func (s *State) handleAppSearch(
 
 	app, err := e.Client().Rest.GetCurrentApplication()
 	if err != nil {
-		return e.CreateMessage(discordx.EphemeralError("Failed to retrieve application information."))
+		return e.CreateMessage(
+			discordx.EphemeralError("Failed to retrieve application information."),
+		)
 	}
 
 	var cmd discord.ApplicationCommand
@@ -204,7 +208,9 @@ func (s *State) handleAppScope(
 
 	app, err := e.Client().Rest.GetCurrentApplication()
 	if err != nil {
-		return e.CreateMessage(discordx.EphemeralError("Failed to retrieve application information."))
+		return e.CreateMessage(
+			discordx.EphemeralError("Failed to retrieve application information."),
+		)
 	}
 
 	var cmds []discord.ApplicationCommand
@@ -261,7 +267,9 @@ func (s *State) handleAppDelete(
 
 	app, err := e.Client().Rest.GetCurrentApplication()
 	if err != nil {
-		return e.CreateMessage(discordx.EphemeralError("Failed to retrieve application information."))
+		return e.CreateMessage(
+			discordx.EphemeralError("Failed to retrieve application information."),
+		)
 	}
 
 	if deleteAll {
@@ -277,12 +285,18 @@ func (s *State) handleAppDelete(
 		}
 
 		return e.CreateMessage(
-			discord.NewMessageCreate().WithContent("All commands have been deleted.").WithEphemeral(true),
+			discord.NewMessageCreate().
+				WithContent("All commands have been deleted.").
+				WithEphemeral(true),
 		)
 	}
 
 	if cmdIDStr == "" {
-		return e.CreateMessage(discordx.EphemeralError("The cmd_id parameter is required when not deleting all commands."))
+		return e.CreateMessage(
+			discordx.EphemeralError(
+				"The cmd_id parameter is required when not deleting all commands.",
+			),
+		)
 	}
 
 	cmdID, err := snowflake.Parse(cmdIDStr)

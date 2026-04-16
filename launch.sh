@@ -11,6 +11,8 @@ readonly KERNEL_BIN="${BIN_DIR}/kernel"
 
 cd "${SCRIPT_DIR}"
 
+mkdir -p flag extensions
+
 if [[ -f .env ]]; then
   mkdir -p "${CONFIGS_DIR}"
   cp .env "${DOTENV_PATH}"

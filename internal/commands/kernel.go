@@ -90,6 +90,7 @@ func (s *State) handleKernelUpdate(
 	}
 
 	_ = writeRestartFlag(s.paths.FlagDir, e.User().ID)
+	s.SaveShardStates()
 	s.RequestShutdown("kernel updated")
 
 	return e.CreateMessage(

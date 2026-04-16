@@ -22,18 +22,6 @@ func (s *State) authorizeOrReply(e *handler.CommandEvent) (bool, error) {
 	)
 }
 
-func boolPtr(v bool) *bool {
-	return &v
-}
-
-func min(a int, b int) int {
-	if a < b {
-		return a
-	}
-
-	return b
-}
-
 func writeLines(fn func(w func(string, ...any))) string {
 	var b bytes.Buffer
 

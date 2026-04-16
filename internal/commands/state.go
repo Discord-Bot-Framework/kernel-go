@@ -3,6 +3,7 @@ package commands
 import (
 	"context"
 	"log/slog"
+	"slices"
 	"sync"
 
 	"github.com/discord-bot-framework/kernel-go/internal/modules"
@@ -14,7 +15,8 @@ import (
 type State struct {
 	logger *slog.Logger
 
-	modules *modules.Manager
+	modules   *modules.Manager
+	paginator *utils.PaginatorManager
 
 	shutdownCh chan struct{}
 	paths      utils.Paths
@@ -22,6 +24,8 @@ type State struct {
 	cfg utils.Config
 
 	shutdownOnce sync.Once
+
+	saveShardStates func()
 }
 
 func NewState(logger *slog.Logger, cfg utils.Config, baseDir string) *State {
@@ -32,6 +36,7 @@ func NewState(logger *slog.Logger, cfg utils.Config, baseDir string) *State {
 		cfg:        cfg,
 		paths:      p,
 		modules:    modules.NewManager(logger, cfg, p),
+		paginator:  utils.NewPaginatorManager(logger, utils.DefaultPaginatorConfig()),
 		shutdownCh: make(chan struct{}),
 	}
 }
@@ -51,6 +56,16 @@ func (s *State) StopAllModules(ctx context.Context) {
 	s.modules.StopAll(ctx)
 }
 
+func (s *State) SetShardStateSaver(fn func()) {
+	s.saveShardStates = fn
+}
+
+func (s *State) SaveShardStates() {
+	if s.saveShardStates != nil {
+		s.saveShardStates()
+	}
+}
+
 func (s *State) Authorize(interaction discord.Interaction) bool {
 	member := interaction.Member()
 	if member == nil {
@@ -63,13 +78,7 @@ func (s *State) Authorize(interaction discord.Interaction) bool {
 		}
 
 		needle := snowflake.ID(s.cfg.RoleID)
-		for _, roleID := range member.RoleIDs {
-			if roleID == needle {
-				return true
-			}
-		}
-
-		return false
+		return slices.Contains(member.RoleIDs, needle)
 	}
 
 	return member.Permissions.Has(discord.PermissionAdministrator)
