@@ -6,7 +6,7 @@ require (
 	github.com/disgoorg/disgo v0.19.3
 	github.com/disgoorg/json/v2 v2.0.0
 	github.com/disgoorg/snowflake/v2 v2.0.3
-	github.com/go-git/go-git/v5 v5.17.2
+	github.com/go-git/go-git/v5 v5.18.0
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.18.5
 	github.com/traefik/yaegi v0.16.1
